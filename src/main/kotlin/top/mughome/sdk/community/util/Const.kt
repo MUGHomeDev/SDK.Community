@@ -1,6 +1,6 @@
 /*
- * MUGHome.Utils.Flarum - A Flarum Util for Java/Kotlin
- * https://github.com/MUGHomeDev/MUGHome.Utils.Flarum
+ * MUGHome Community SDK - MUGHome Community SDK for Kotlin/Java
+ * https://github.com/MUGHomeDev/SDK.Community
  * Copyright (C) 2021-2022  MUGHome
  *
  * This Library is free software: you can redistribute it
