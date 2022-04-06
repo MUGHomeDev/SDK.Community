@@ -22,21 +22,46 @@
  * Please contact us by email contact@mail.mughome.top
  * if you need additional information or have any questions
  */
-package top.mughome.sdk.community.util
+package top.mughome.sdk.community
+
+import top.mughome.sdk.community.manager.AccountManager
+import top.mughome.sdk.community.util.Getter
 
 /**
- * 全局常量
+ * Community
  * @author Yang
  * @since 0.0.1
  */
-internal object Const {
+object Community {
     /**
-     * API版本
+     * 需初始化：User-Agent
      */
-    private const val API_VERSION = "v0"
+    internal lateinit var userAgent: String
 
     /**
-     * API地址
+     * 徐初始化：用户token
      */
-    const val BASE_URL = "https://api.mughome.top/community/$API_VERSION/"
+    internal lateinit var token: String
+
+    /**
+     * 初始化类
+     * @author Yang
+     * @since 0.0.1
+     * @param userAgent User-Agent
+     */
+    fun init(userAgent: String) {
+        this.userAgent = userAgent
+    }
+
+    /**
+     * 登录后回调，初始化全局token
+     * @author Yang
+     * @since 0.0.1
+     * @param token 用户token
+     * @see AccountManager.login
+     * @see Getter
+     */
+    internal fun loginCallback(token: String) {
+        this.token = token
+    }
 }

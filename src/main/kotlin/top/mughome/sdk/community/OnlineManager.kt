@@ -22,21 +22,21 @@
  * Please contact us by email contact@mail.mughome.top
  * if you need additional information or have any questions
  */
-package top.mughome.sdk.community.util
+package top.mughome.sdk.community
 
-/**
- * 全局常量
- * @author Yang
- * @since 0.0.1
- */
-internal object Const {
-    /**
-     * API版本
-     */
-    private const val API_VERSION = "v0"
+class OnlineManager {
 
-    /**
-     * API地址
-     */
-    const val BASE_URL = "https://api.mughome.top/community/$API_VERSION/"
+    //region AccountManager
+    fun login(username: String, password: String): Boolean {
+        return true
+    }
+
+    fun logout() {
+    }
+
+    fun register(username: String, password: String): Boolean {
+        return true
+    }
+    //endregion
+
 }

@@ -22,21 +22,47 @@
  * Please contact us by email contact@mail.mughome.top
  * if you need additional information or have any questions
  */
-package top.mughome.sdk.community.util
+package top.mughome.sdk.community.model
 
 /**
- * 全局常量
+ * 基础数据模型
  * @author Yang
  * @since 0.0.1
+ * @see ModelType
  */
-internal object Const {
+internal interface BaseModel {
     /**
-     * API版本
+     * 数据类型
      */
-    private const val API_VERSION = "v0"
+    val type: ModelType
 
     /**
-     * API地址
+     * id
      */
-    const val BASE_URL = "https://api.mughome.top/community/$API_VERSION/"
+    var id: Int
+
+    /**
+     * 重写toString
+     */
+    override fun toString(): String
+}
+
+/**
+ * 数据类型
+ */
+enum class ModelType {
+    /**
+     * 用户
+     */
+    USER,
+
+    /**
+     * 帖子
+     */
+    POST,
+
+    /**
+     * 回复
+     */
+    COMMENT
 }

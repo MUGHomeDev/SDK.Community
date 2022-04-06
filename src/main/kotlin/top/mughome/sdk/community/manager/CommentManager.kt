@@ -22,21 +22,14 @@
  * Please contact us by email contact@mail.mughome.top
  * if you need additional information or have any questions
  */
-package top.mughome.sdk.community.util
+package top.mughome.sdk.community.manager
 
 /**
- * 全局常量
+ * 评论信息操作类
  * @author Yang
  * @since 0.0.1
+ * @see BaseManager
  */
-internal object Const {
-    /**
-     * API版本
-     */
-    private const val API_VERSION = "v0"
-
-    /**
-     * API地址
-     */
-    const val BASE_URL = "https://api.mughome.top/community/$API_VERSION/"
+internal class CommentManager : BaseManager() {
+    //TODO: 实现评论的发送、编辑、删除、查询等功能
 }
