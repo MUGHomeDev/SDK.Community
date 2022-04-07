@@ -95,9 +95,17 @@ class PostManager : IManager, Post, Included() {
      * @param id 帖子id
      * @throws IOException
      * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IllegalStateException
      * @author Yang
      * @since 0.0.1
      */
+    @Throws(
+        IOException::class,
+        JSONException::class,
+        MalformedURLException::class,
+        IllegalStateException::class
+    )
     override suspend fun get(id: Int) {
         val json = Getter.getPost(id)
         Parser.parsePost(json.getJSONObject("data"), this)

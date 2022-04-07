@@ -51,6 +51,8 @@ import java.net.URL
  * @see IToken
  */
 class AccountManager : UserManager(), IToken {
+    // region 初始化
+
     /**
      * 实例内使用的OkHttpClient
      */
@@ -62,26 +64,9 @@ class AccountManager : UserManager(), IToken {
     override var exp = -1L
     override var token = ""
 
-    /**
-     * 清除字段数据
-     * @author Yang
-     * @since 0.0.1
-     * @return 清空的AccountManager
-     */
-    fun clear(): AccountManager {
-        exp = -1L
-        token = ""
+    // endregion
 
-        id = -1
-
-        userName = ""
-        userNickname = ""
-        userAvatar = ""
-        userRole = -1
-        userCreatedDate = ""
-
-        return this
-    }
+    // region 账号操作
 
     /**
      * 登录
@@ -235,6 +220,10 @@ class AccountManager : UserManager(), IToken {
         return code
     }
 
+    // endregion
+
+    // region 其他操作
+
     /**
      * 重新发送邮件
      * @author Yang
@@ -311,4 +300,20 @@ class AccountManager : UserManager(), IToken {
     override fun toString(): String {
         return "AccountManager(id=$id, userName='$userName', userNickname='$userNickname', userAvatar='$userAvatar', userRole=$userRole, userCreatedDate='$userCreatedDate', exp=$exp, token='$token')"
     }
+
+    /**
+     * 清除字段数据
+     * @author Yang
+     * @since 0.0.1
+     * @return 清空的AccountManager
+     */
+    override fun clear(): AccountManager {
+        super.clear()
+        exp = -1L
+        token = ""
+
+        return this
+    }
+
+    // endregion
 }
