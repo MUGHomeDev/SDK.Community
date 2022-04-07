@@ -24,19 +24,32 @@
  */
 package top.mughome.sdk.community
 
+import top.mughome.sdk.community.manager.AccountManager
+import top.mughome.sdk.community.manager.PostManager
+import top.mughome.sdk.community.manager.UserManager
+
+/**
+ * 在线Manager
+ * @author Yang
+ * @since 0.0.1
+ */
 class OnlineManager {
+    /**
+     * 获取AccountManager
+     */
+    val accountManager = AccountManager()
+        get() = field.clear()
 
-    //region AccountManager
-    fun login(username: String, password: String): Boolean {
-        return true
-    }
+    /**
+     * 获取PostManager
+     */
+    val postManager = PostManager()
+        get() = field.clear()
 
-    fun logout() {
-    }
 
-    fun register(username: String, password: String): Boolean {
-        return true
-    }
-    //endregion
-
+    /**
+     * 获取UserManager
+     */
+    val userManager = UserManager()
+        get() = field.clear()
 }

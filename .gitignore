@@ -102,3 +102,5 @@ hs_err_pid*
 replay_pid*
 
 gradle.properties
+
+Test.kt

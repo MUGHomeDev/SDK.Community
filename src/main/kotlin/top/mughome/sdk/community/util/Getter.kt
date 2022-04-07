@@ -29,22 +29,34 @@ import kotlinx.coroutines.withContext
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONException
 import org.json.JSONObject
 import top.mughome.sdk.community.Community
 import top.mughome.sdk.community.Community.token
 import java.io.IOException
+import java.net.MalformedURLException
 import java.net.URL
 
 /**
  * 该类用来获取api返回的原始JSON数据
  * @author Yang
  * @since 0.0.1
+ * @throws IOException
+ * @throws IllegalStateException
+ * @throws JSONException
+ * @throws MalformedURLException
  */
 internal object Getter {
+    // region 初始化
+
     /**
      * 发送请求用的OkHttpClient
      */
     private val client = OkHttpClient()
+
+    // endregion
+
+    // region 获取数据
 
     /**
      * 获取所有用户
@@ -52,8 +64,9 @@ internal object Getter {
      * @since 0.0.1
      * @return JSONObject 用户列表
      */
-    fun getUsers(): JSONObject {
-        throw NotImplementedError("Not implemented")
+    suspend fun getUsers(): JSONObject {
+        val url = URL(Const.BASE_URL + "user")
+        return JSONObject(get(url).body?.string().toString())
     }
 
     /**
@@ -63,8 +76,9 @@ internal object Getter {
      * @param id 用户id
      * @return JSONObject 用户信息
      */
-    fun getUser(id: Int): JSONObject {
-        throw NotImplementedError("Not implemented")
+    suspend fun getUser(id: Int): JSONObject {
+        val url = URL(Const.BASE_URL + "user/$id")
+        return JSONObject(get(url).body?.string().toString())
     }
 
     /**
@@ -74,8 +88,9 @@ internal object Getter {
      * @param name 用户名
      * @return JSONObject 用户信息
      */
-    fun getUser(name: String): JSONObject {
-        throw NotImplementedError("Not implemented")
+    suspend fun getUser(name: String): JSONObject {
+        val url = URL(Const.BASE_URL + "user?name=$name")
+        return JSONObject(get(url).body?.string().toString())
     }
 
     /**
@@ -84,8 +99,9 @@ internal object Getter {
      * @since 0.0.1
      * @return JSONObject 帖子列表
      */
-    fun getPosts(): JSONObject {
-        throw NotImplementedError("Not implemented")
+    suspend fun getPosts(): JSONObject {
+        val url = URL(Const.BASE_URL + "post")
+        return JSONObject(get(url).body?.string().toString())
     }
 
     /**
@@ -95,9 +111,14 @@ internal object Getter {
      * @param id 帖子id
      * @return JSONObject 帖子信息
      */
-    fun getPost(id: Int): JSONObject {
-        throw NotImplementedError("Not implemented")
+    suspend fun getPost(id: Int): JSONObject {
+        val url = URL(Const.BASE_URL + "post/$id")
+        return JSONObject(get(url).body?.string().toString())
     }
+
+    // endregion
+
+    // region 发送请求
 
     /**
      * 通过url发送请求
@@ -105,27 +126,29 @@ internal object Getter {
      * @since 0.0.1
      * @param url 请求url
      * @return JSONObject 请求返回的json数据
+     * @throws IOException
+     * @throws IllegalStateException
      */
-    @Throws(IOException::class, IllegalStateException::class)
-    private suspend fun get(
+    @Throws(
+        IOException::class,
+        IllegalStateException::class
+    )
+    suspend fun get(
         url: URL,
     ) = withContext(Dispatchers.IO) {
         return@withContext client.newCall(
             Request.Builder()
                 .url(url)
                 .headers(
-                    if (token.isNotEmpty() && token.isNotBlank())
-                        Headers.headersOf(
-                            "User-Agent", Community.userAgent,
-                            "Authorization", "Bearer $token"
-                        )
-                    else
-                        Headers.headersOf(
-                            "User-Agent", Community.userAgent
-                        )
+                    Headers.headersOf(
+                        "User-Agent", Community.userAgent,
+                        "Authorization", "Bearer $token"
+                    )
                 )
                 .get()
                 .build()
         ).execute()
     }
+
+    // endregion
 }
