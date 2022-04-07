@@ -35,7 +35,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import top.mughome.sdk.community.Community
 import top.mughome.sdk.community.model.ErrorCode
+import top.mughome.sdk.community.model.IToken
 import top.mughome.sdk.community.util.Const
+import top.mughome.sdk.community.util.Getter
 import top.mughome.sdk.community.util.Parser
 import java.io.IOException
 import java.net.MalformedURLException
@@ -45,20 +47,40 @@ import java.net.URL
  * 账号登录、注册、登出操作类
  * @author Yang
  * @since 0.0.1
- * @see Community
- * @see ErrorCode
- * @see BaseManager
+ * @see UserManager
+ * @see IToken
  */
-internal class AccountManager : BaseManager() {
+class AccountManager : UserManager(), IToken {
     /**
      * 实例内使用的OkHttpClient
      */
     private val client = OkHttpClient()
 
     /**
-     * 登录返回的token
+     * 初始化IToken字段
      */
-    private lateinit var token: String
+    override var exp = -1L
+    override var token = ""
+
+    /**
+     * 清除字段数据
+     * @author Yang
+     * @since 0.0.1
+     */
+    fun clear(): AccountManager {
+        exp = -1L
+        token = ""
+
+        id = -1
+
+        userName = ""
+        userNickname = ""
+        userAvatar = ""
+        userRole = -1
+        userCreatedDate = ""
+
+        return this
+    }
 
     /**
      * 登录
@@ -74,7 +96,12 @@ internal class AccountManager : BaseManager() {
      * @throws IllegalStateException
      * @throws JSONException
      */
-    @Throws(MalformedURLException::class, IOException::class, IllegalStateException::class, JSONException::class)
+    @Throws(
+        MalformedURLException::class,
+        IOException::class,
+        IllegalStateException::class,
+        JSONException::class
+    )
     suspend fun login(
         userName: String,
         password: String,
@@ -82,9 +109,9 @@ internal class AccountManager : BaseManager() {
     ): ErrorCode {
         val url = URL(Const.BASE_URL + "account/login")
         val json = JSONObject()
-            .put("user", userName)
+            .put("name", userName)
             .put("password", password)
-            .put("remember", remember)
+            .put("isRemember", remember)
 
         val response = post(url, json)
 
@@ -97,7 +124,145 @@ internal class AccountManager : BaseManager() {
         if (code != ErrorCode.SUCCESS) {
             response.close(); return code
         }
-        // TODO: 获取该用户信息后解析
+
+        Parser.parseLogin(responseJson, this)
+
+        Community.loginCallback(this.token)
+        response.close()
+        return code
+    }
+
+    /**
+     * 注册
+     * @author Yang
+     * @since 0.0.1
+     * @param userName 用户名
+     * @param password 密码
+     * @param email 邮箱
+     * @param term 是否同意服务条款
+     * @return 注册结果
+     * @see ErrorCode
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws IllegalStateException
+     * @throws JSONException
+     */
+    @Throws(
+        MalformedURLException::class,
+        IOException::class,
+        IllegalStateException::class,
+        JSONException::class
+    )
+    suspend fun register(
+        userName: String,
+        password: String,
+        email: String,
+        term: Boolean,
+    ): ErrorCode {
+        val url = URL(Const.BASE_URL + "account/register")
+        val json = JSONObject()
+            .put("name", userName)
+            .put("password", password)
+            .put("email", email)
+            .put("isAcceptTerm", term)
+
+        val response = post(url, json)
+
+        if (response.code != 200) {
+            response.close(); return ErrorCode.UNKNOWN_EXCEPTION
+        }
+
+        val responseJson = JSONObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInt("code"))
+        if (code != ErrorCode.SUCCESS) {
+            response.close(); return code
+        }
+
+        Parser.parseLogin(responseJson, this)
+        Community.loginCallback(this.token)
+        response.close()
+        return code
+    }
+
+    /**
+     * 登出
+     * @author Yang
+     * @since 0.0.1
+     */
+    fun logout() {
+        clear()
+        token = ""
+        exp = -1L
+    }
+
+    /**
+     * token更新
+     * @author Yang
+     * @since 0.0.1
+     * @param token token
+     * @return 更新结果
+     * @see ErrorCode
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws IllegalStateException
+     * @throws JSONException
+     */
+    @Throws(
+        MalformedURLException::class,
+        IOException::class,
+        IllegalStateException::class,
+        JSONException::class
+    )
+    suspend fun tokenRenew(token: String = this.token): ErrorCode {
+        val url = URL(Const.BASE_URL + "token/renew?token=$token&isRemember=true")
+
+        val response = Getter.get(url)
+
+        if (response.code != 200) {
+            response.close(); return ErrorCode.UNKNOWN_EXCEPTION
+        }
+
+        val responseJson = JSONObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInt("code"))
+        if (code != ErrorCode.SUCCESS) {
+            response.close(); return code
+        }
+
+        Parser.parseToken(responseJson.getJSONObject("data").getJSONObject("token"), this)
+        Community.loginCallback(this.token)
+        response.close()
+        return code
+    }
+
+    /**
+     * 重新发送邮件
+     * @author Yang
+     * @since 0.0.1
+     * @param id 用户id
+     * @return 操作结果
+     * @see ErrorCode
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws IllegalStateException
+     * @throws JSONException
+     */
+    @Throws(
+        MalformedURLException::class,
+        IOException::class,
+        IllegalStateException::class,
+        JSONException::class
+    )
+    suspend fun resendVerifyEmail(id: Int = this.id): ErrorCode {
+        val url = URL(Const.BASE_URL + "email/verify/send?userId=$id")
+
+        val response = Getter.get(url)
+
+        if (response.code != 200) {
+            response.close(); return ErrorCode.UNKNOWN_EXCEPTION
+        }
+        val responseJson = JSONObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInt("code"))
+        response.close()
         return code
     }
 
@@ -111,7 +276,10 @@ internal class AccountManager : BaseManager() {
      * @throws IOException
      * @throws IllegalStateException
      */
-    @Throws(IOException::class, IllegalStateException::class)
+    @Throws(
+        IOException::class,
+        IllegalStateException::class
+    )
     private suspend fun post(
         url: URL,
         outputData: JSONObject
@@ -120,17 +288,10 @@ internal class AccountManager : BaseManager() {
             Request.Builder()
                 .url(url)
                 .headers(
-                    if (token.isNotEmpty() && token.isNotBlank())
-                        Headers.headersOf(
-                            "User-Agent", Community.userAgent,
-                            "Content-Type", "application/json",
-                            "Authorization", "Bearer $token"
-                        )
-                    else
-                        Headers.headersOf(
-                            "User-Agent", Community.userAgent,
-                            "Content-Type", "application/json"
-                        )
+                    Headers.headersOf(
+                        "User-Agent", Community.userAgent,
+                        "Content-Type", "application/json; charset=utf-8"
+                    )
                 )
                 .post(
                     outputData.toString()
@@ -138,5 +299,14 @@ internal class AccountManager : BaseManager() {
                 )
                 .build()
         ).execute()
+    }
+
+    /**
+     * 重写toString方法
+     * @author Yang
+     * @since 0.0.1
+     */
+    override fun toString(): String {
+        return "AccountManager(id=$id, userName='$userName', userNickname='$userNickname', userAvatar='$userAvatar', userRole=$userRole, userCreatedDate='$userCreatedDate', exp=$exp, token='$token')"
     }
 }
