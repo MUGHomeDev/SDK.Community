@@ -24,8 +24,13 @@
  */
 package top.mughome.sdk.community.model
 
+import top.mughome.sdk.community.util.Parser
+
 /**
  * 所有错误码
+ * @author Yang
+ * @since 0.0.1
+ * @see Parser.parse
  */
 enum class ErrorCode {
     NO_ACCESS_TO_OPERATE,             // -1

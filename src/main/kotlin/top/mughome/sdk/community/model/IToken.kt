@@ -24,48 +24,22 @@
  */
 package top.mughome.sdk.community.model
 
+import top.mughome.sdk.community.manager.AccountManager
+
 /**
- * 基础数据模型
+ * Token接口
  * @author Yang
  * @since 0.0.1
- * @see ModelType
+ * @see AccountManager
  */
-interface BaseModel {
+internal interface IToken {
     /**
-     * 数据类型
+     * token
      */
-    val type: ModelType
+    var token: String
 
     /**
-     * id
+     * 过期时间
      */
-    var id: Int
-
-    /**
-     * 重写toString
-     */
-    override fun toString(): String
-}
-
-/**
- * 数据类型
- */
-enum class ModelType {
-    /**
-     * 用户
-     * @see User
-     */
-    USER,
-
-    /**
-     * 帖子
-     * @see Post
-     */
-    POST,
-
-    /**
-     * 回复
-     * @see Comment
-     */
-    COMMENT
+    var exp: Long
 }

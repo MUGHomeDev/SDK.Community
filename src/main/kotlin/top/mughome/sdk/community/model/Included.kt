@@ -22,14 +22,39 @@
  * Please contact us by email contact@mail.mughome.top
  * if you need additional information or have any questions
  */
-package top.mughome.sdk.community.manager
+package top.mughome.sdk.community.model
+
+import top.mughome.sdk.community.manager.PostManager
 
 /**
- * 评论信息操作类
+ * Included数据
  * @author Yang
  * @since 0.0.1
- * @see BaseManager
+ * @see BaseModel
+ * @see PostManager
  */
-internal class CommentManager : BaseManager() {
-    //TODO: 实现评论的发送、编辑、删除、查询等功能
+abstract class Included {
+    /**
+     * 包含的数据
+     * @author Yang
+     * @see BaseModel
+     * @since 0.0.1
+     */
+    open lateinit var included: MutableList<BaseModel>
+
+    /**
+     * 获取一组依赖于BasicModel的数据
+     * @author Yang
+     * @see BaseModel
+     * @since 0.0.1
+     */
+    inline fun <reified T : BaseModel> getModel(): Map<Int, T> {
+        val map = mutableMapOf<Int, T>()
+        included.forEach {
+            if (it is T) {
+                map[it.id] = it
+            }
+        }
+        return map
+    }
 }

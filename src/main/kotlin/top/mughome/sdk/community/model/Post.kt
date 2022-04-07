@@ -24,48 +24,73 @@
  */
 package top.mughome.sdk.community.model
 
+import top.mughome.sdk.community.manager.PostManager
+
 /**
- * 基础数据模型
+ * 帖子类型
  * @author Yang
  * @since 0.0.1
- * @see ModelType
+ * @see BaseModel
+ * @see PostManager
  */
-interface BaseModel {
+internal interface Post : BaseModel {
     /**
-     * 数据类型
+     * 帖子标题
      */
-    val type: ModelType
+    var title: String
 
     /**
-     * id
+     * 创建用户id
      */
-    var id: Int
+    var createdUserId: Int
 
     /**
-     * 重写toString
+     * 帖子内容
      */
-    override fun toString(): String
-}
-
-/**
- * 数据类型
- */
-enum class ModelType {
-    /**
-     * 用户
-     * @see User
-     */
-    USER,
+    var content: String
 
     /**
-     * 帖子
-     * @see Post
+     * 创建日期
      */
-    POST,
+    var createdDate: String
 
     /**
-     * 回复
-     * @see Comment
+     * 最后一个回复id
      */
-    COMMENT
+    var lastCommentId: Int?
+
+    /**
+     * 最后一个回复用户id
+     */
+    var lastCommentUserId: Int?
+
+    /**
+     * 最后一个回复日期
+     */
+    var lastCommentDate: String?
+
+    /**
+     * 编辑日期
+     */
+    var editedDate: String?
+
+    /**
+     * 编辑用户id
+     */
+    var editedUserId: Int?
+
+    /**
+     * 观看数
+     */
+    var viewCount: Int
+
+    /**
+     * 回复数
+     */
+    var commentCount: Int
+
+    /**
+     * 点赞数
+     */
+    var likeCount: Int
 }

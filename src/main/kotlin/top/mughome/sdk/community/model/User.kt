@@ -24,48 +24,38 @@
  */
 package top.mughome.sdk.community.model
 
+import top.mughome.sdk.community.manager.UserManager
+
 /**
- * 基础数据模型
+ * 用户类型
  * @author Yang
  * @since 0.0.1
- * @see ModelType
+ * @see UserManager
+ * @see BaseModel
  */
-interface BaseModel {
+internal interface User : BaseModel {
     /**
-     * 数据类型
+     * 用户名
      */
-    val type: ModelType
+    var userName: String
 
     /**
-     * id
+     * 用户昵称
      */
-    var id: Int
+    var userNickname: String
 
     /**
-     * 重写toString
+     * 用户头像URL
      */
-    override fun toString(): String
-}
-
-/**
- * 数据类型
- */
-enum class ModelType {
-    /**
-     * 用户
-     * @see User
-     */
-    USER,
+    var userAvatar: String
 
     /**
-     * 帖子
-     * @see Post
+     * 用户角色
      */
-    POST,
+    var userRole: Int
 
     /**
-     * 回复
-     * @see Comment
+     * 用户注册时间
      */
-    COMMENT
+    var userCreatedDate: String
 }

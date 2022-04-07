@@ -25,47 +25,64 @@
 package top.mughome.sdk.community.model
 
 /**
- * 基础数据模型
+ * 评论类型
  * @author Yang
  * @since 0.0.1
- * @see ModelType
+ * @see BaseModel
  */
-interface BaseModel {
+internal interface Comment : BaseModel {
     /**
-     * 数据类型
+     * 评论对应的帖子id
      */
-    val type: ModelType
+    var postId: Int
 
     /**
-     * id
+     * 创建日期
      */
-    var id: Int
+    var createdDate: String
 
     /**
-     * 重写toString
+     * 创建用户id
      */
-    override fun toString(): String
-}
-
-/**
- * 数据类型
- */
-enum class ModelType {
-    /**
-     * 用户
-     * @see User
-     */
-    USER,
+    var createdUserId: Int
 
     /**
-     * 帖子
-     * @see Post
+     * 内容
      */
-    POST,
+    var content: String
 
     /**
-     * 回复
-     * @see Comment
+     * 点赞数
      */
-    COMMENT
+    var likeCount: Int
+
+    /**
+     * 编辑日期
+     */
+    var editedDate: String?
+
+    /**
+     * 编辑用户id
+     */
+    var editedUserId: String?
+
+    /**
+     * 是否隐藏
+     */
+    var isHidden: Boolean
+
+    /**
+     * 隐藏日期
+     */
+    var hiddenDate: String?
+
+    /**
+     * 隐藏用户id
+     */
+    var hiddenUserId: Int?
+
+    /**
+     * ip地址
+     */
+    var ipAddress: String
 }
