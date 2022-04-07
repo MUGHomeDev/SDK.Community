@@ -43,6 +43,7 @@ enum class ErrorCode {
     TOKEN_FORMAT_INVALID,             // 51
     TOKEN_HAS_EXPIRED,                // 52
     TOKEN_SIGN_INVALID,               // 53
+    NO_NEED_TO_UPDATE,                // 54
     CANNOT_FIND_POST,                 // 60
     POST_HAS_BEEN_HIDDEN,             // 61
     CANNOT_FIND_COMMENT,              // 70
