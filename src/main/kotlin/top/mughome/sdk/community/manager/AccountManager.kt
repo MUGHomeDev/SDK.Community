@@ -66,6 +66,7 @@ class AccountManager : UserManager(), IToken {
      * 清除字段数据
      * @author Yang
      * @since 0.0.1
+     * @return 清空的AccountManager
      */
     fun clear(): AccountManager {
         exp = -1L
@@ -305,6 +306,7 @@ class AccountManager : UserManager(), IToken {
      * 重写toString方法
      * @author Yang
      * @since 0.0.1
+     * @return toString
      */
     override fun toString(): String {
         return "AccountManager(id=$id, userName='$userName', userNickname='$userNickname', userAvatar='$userAvatar', userRole=$userRole, userCreatedDate='$userCreatedDate', exp=$exp, token='$token')"
