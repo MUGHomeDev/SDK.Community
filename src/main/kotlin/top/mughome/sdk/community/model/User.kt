@@ -33,7 +33,7 @@ import top.mughome.sdk.community.manager.UserManager
  * @see UserManager
  * @see BaseModel
  */
-internal interface User : BaseModel {
+interface User : BaseModel {
     /**
      * 用户名
      */

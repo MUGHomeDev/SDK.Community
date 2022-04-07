@@ -32,7 +32,7 @@ import top.mughome.sdk.community.manager.AccountManager
  * @since 0.0.1
  * @see AccountManager
  */
-internal interface IToken {
+interface IToken {
     /**
      * token
      */

@@ -33,7 +33,7 @@ import top.mughome.sdk.community.manager.PostManager
  * @see BaseModel
  * @see PostManager
  */
-internal interface Post : BaseModel {
+interface Post : BaseModel {
     /**
      * 帖子标题
      */

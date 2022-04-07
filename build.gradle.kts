@@ -35,7 +35,7 @@ plugins {
 }
 
 group = "top.mughome.sdk"
-version = "0.0.2"
+version = "0.0.3"
 
 repositories {
     maven("https://mvn.mughome.top/repository/maven-public/")
@@ -79,7 +79,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "top.mughome.sdk"
             artifactId = "community"
-            version = "0.0.2"
+            version = "0.0.3"
 
             from(components["java"])
 

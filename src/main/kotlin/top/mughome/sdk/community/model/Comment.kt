@@ -30,7 +30,7 @@ package top.mughome.sdk.community.model
  * @since 0.0.1
  * @see BaseModel
  */
-internal interface Comment : BaseModel {
+interface Comment : BaseModel {
     /**
      * 评论对应的帖子id
      */
