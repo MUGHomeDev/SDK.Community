@@ -24,4 +24,20 @@
  */
 package top.mughome.sdk.community.manager
 
-internal open class BaseManager
+/**
+ * 管理类接口
+ * @author Yang
+ * @since 0.0.1
+ * @see AccountManager
+ * @see PostManager
+ * @see UserManager
+ */
+internal interface IManager {
+    /**
+     * 通过id获取
+     * @param id id
+     * @author Yang
+     * @since 0.0.1
+     */
+    suspend fun get(id: Int)
+}
