@@ -24,15 +24,14 @@
  */
 package top.mughome.sdk.community.util
 
+import com.alibaba.fastjson.JSONException
+import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.json.JSONException
-import org.json.JSONObject
 import top.mughome.sdk.community.Community
-import top.mughome.sdk.community.Community.token
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
@@ -66,7 +65,7 @@ internal object Getter {
      */
     suspend fun getUsers(): JSONObject {
         val url = URL(Const.BASE_URL + "user")
-        return JSONObject(get(url).body?.string().toString())
+        return JSONObject.parseObject(get(url).body?.string().toString())
     }
 
     /**
@@ -78,7 +77,7 @@ internal object Getter {
      */
     suspend fun getUser(id: Int): JSONObject {
         val url = URL(Const.BASE_URL + "user/$id")
-        return JSONObject(get(url).body?.string().toString())
+        return JSONObject.parseObject(get(url).body?.string().toString())
     }
 
     /**
@@ -90,7 +89,7 @@ internal object Getter {
      */
     suspend fun getUser(name: String): JSONObject {
         val url = URL(Const.BASE_URL + "user?name=$name")
-        return JSONObject(get(url).body?.string().toString())
+        return JSONObject.parseObject(get(url).body?.string().toString())
     }
 
     /**
@@ -101,7 +100,7 @@ internal object Getter {
      */
     suspend fun getPosts(): JSONObject {
         val url = URL(Const.BASE_URL + "post")
-        return JSONObject(get(url).body?.string().toString())
+        return JSONObject.parseObject(get(url).body?.string().toString())
     }
 
     /**
@@ -113,7 +112,7 @@ internal object Getter {
      */
     suspend fun getPost(id: Int): JSONObject {
         val url = URL(Const.BASE_URL + "post/$id")
-        return JSONObject(get(url).body?.string().toString())
+        return JSONObject.parseObject(get(url).body?.string().toString())
     }
 
     // endregion
@@ -141,8 +140,7 @@ internal object Getter {
                 .url(url)
                 .headers(
                     Headers.headersOf(
-                        "User-Agent", Community.userAgent,
-                        "Authorization", "Bearer $token"
+                        "User-Agent", Community.userAgent
                     )
                 )
                 .get()

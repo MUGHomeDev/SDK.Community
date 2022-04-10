@@ -24,6 +24,8 @@
  */
 package top.mughome.sdk.community.manager
 
+import com.alibaba.fastjson.JSONException
+import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Headers
@@ -31,8 +33,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONException
-import org.json.JSONObject
 import top.mughome.sdk.community.Community
 import top.mughome.sdk.community.model.ErrorCode
 import top.mughome.sdk.community.model.IToken
@@ -94,19 +94,19 @@ class AccountManager : UserManager(), IToken {
         remember: Boolean = false
     ): ErrorCode {
         val url = URL(Const.BASE_URL + "account/login")
-        val json = JSONObject()
-            .put("name", userName)
-            .put("password", password)
-            .put("isRemember", remember)
-
+        val json = JSONObject().apply {
+            put("name", userName)
+            put("password", password)
+            put("isRemember", remember)
+        }
         val response = post(url, json)
 
         if (response.code != 200) {
             response.close(); return ErrorCode.UNKNOWN_EXCEPTION
         }
 
-        val responseJson = JSONObject(response.body?.string().toString())
-        val code = Parser.parse(responseJson.getInt("code"))
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
         if (code != ErrorCode.SUCCESS) {
             response.close(); return code
         }
@@ -146,20 +146,20 @@ class AccountManager : UserManager(), IToken {
         term: Boolean,
     ): ErrorCode {
         val url = URL(Const.BASE_URL + "account/register")
-        val json = JSONObject()
-            .put("name", userName)
-            .put("password", password)
-            .put("email", email)
-            .put("isAcceptTerm", term)
-
+        val json = JSONObject().apply {
+            put("name", userName)
+            put("password", password)
+            put("email", email)
+            put("isAcceptTerm", term)
+        }
         val response = post(url, json)
 
         if (response.code != 200) {
             response.close(); return ErrorCode.UNKNOWN_EXCEPTION
         }
 
-        val responseJson = JSONObject(response.body?.string().toString())
-        val code = Parser.parse(responseJson.getInt("code"))
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
         if (code != ErrorCode.SUCCESS) {
             response.close(); return code
         }
@@ -208,8 +208,8 @@ class AccountManager : UserManager(), IToken {
             response.close(); return ErrorCode.UNKNOWN_EXCEPTION
         }
 
-        val responseJson = JSONObject(response.body?.string().toString())
-        val code = Parser.parse(responseJson.getInt("code"))
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
         if (code != ErrorCode.SUCCESS) {
             response.close(); return code
         }
@@ -250,8 +250,8 @@ class AccountManager : UserManager(), IToken {
         if (response.code != 200) {
             response.close(); return ErrorCode.UNKNOWN_EXCEPTION
         }
-        val responseJson = JSONObject(response.body?.string().toString())
-        val code = Parser.parse(responseJson.getInt("code"))
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
         response.close()
         return code
     }
@@ -298,7 +298,7 @@ class AccountManager : UserManager(), IToken {
      * @return toString
      */
     override fun toString(): String {
-        return "AccountManager(id=$id, userName='$userName', userNickname='$userNickname', userAvatar='$userAvatar', userRole=$userRole, userCreatedDate='$userCreatedDate', exp=$exp, token='$token')"
+        return "AccountManager(id=$id, userName='$userName', userDisplayName='$userDisplayName', userRole=$userRole, userAvatar='$userAvatar', userCreatedDate='$userCreatedDate', exp=$exp, token='$token')"
     }
 
     /**

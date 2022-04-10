@@ -35,7 +35,7 @@ plugins {
 }
 
 group = "top.mughome.sdk"
-version = "0.0.3"
+version = "0.0.6"
 
 repositories {
     maven("https://mvn.mughome.top/repository/maven-public/")
@@ -45,7 +45,6 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
-    implementation("org.json:json:20220320")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation("com.alibaba:fastjson:1.2.80")
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.6")
@@ -57,7 +56,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 sourceSets {
@@ -79,7 +78,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "top.mughome.sdk"
             artifactId = "community"
-            version = "0.0.3"
+            version = "0.0.6"
 
             from(components["java"])
 

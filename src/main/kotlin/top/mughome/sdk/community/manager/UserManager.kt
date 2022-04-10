@@ -24,7 +24,7 @@
  */
 package top.mughome.sdk.community.manager
 
-import org.json.JSONException
+import com.alibaba.fastjson.JSONException
 import top.mughome.sdk.community.model.ModelType
 import top.mughome.sdk.community.model.User
 import top.mughome.sdk.community.util.Getter
@@ -51,7 +51,7 @@ open class UserManager : IManager, User {
      * 初始化User
      */
     override var userName = ""
-    override var userNickname = ""
+    override var userDisplayName = ""
     override var userAvatar = ""
     override var userRole = -1
     override var userCreatedDate = ""
@@ -80,7 +80,7 @@ open class UserManager : IManager, User {
     )
     override suspend fun get(id: Int) {
         val json = Getter.getUser(id)
-        Parser.parseUser(json, this)
+        Parser.parseUser(json.getJSONObject("data"), this)
     }
 
     suspend fun update() {
@@ -98,7 +98,7 @@ open class UserManager : IManager, User {
      * @since 0.0.1
      */
     override fun toString(): String {
-        return "UserManager(id=$id, userName='$userName', userNickname='$userNickname', userAvatar='$userAvatar', userRole=$userRole, userCreatedDate='$userCreatedDate')"
+        return "UserManager(id=$id, userName='$userName', userNickname='$userDisplayName', userRole=$userRole, userAvatar='$userAvatar', userCreatedDate='$userCreatedDate')"
     }
 
     /**
@@ -110,9 +110,9 @@ open class UserManager : IManager, User {
     open fun clear(): UserManager {
         id = -1
         userName = ""
-        userNickname = ""
-        userAvatar = ""
+        userDisplayName = ""
         userRole = -1
+        userAvatar = ""
         userCreatedDate = ""
 
         return this

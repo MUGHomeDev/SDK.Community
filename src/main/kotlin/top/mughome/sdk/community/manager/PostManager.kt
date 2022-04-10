@@ -24,6 +24,8 @@
  */
 package top.mughome.sdk.community.manager
 
+import com.alibaba.fastjson.JSONException
+import com.alibaba.fastjson.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Headers
@@ -31,8 +33,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONException
-import org.json.JSONObject
 import top.mughome.sdk.community.Community
 import top.mughome.sdk.community.Community.token
 import top.mughome.sdk.community.model.*
@@ -84,6 +84,8 @@ class PostManager : IManager, Post, Included() {
      */
     override var included: MutableList<BaseModel> = mutableListOf()
 
+    var allPosts = mutableMapOf<Int, Post>()
+
     // endregion
 
     //TODO: 实现帖子信息的更新、删除操作
@@ -111,6 +113,11 @@ class PostManager : IManager, Post, Included() {
         Parser.parsePost(json.getJSONObject("data"), this)
     }
 
+    suspend fun getAll() {
+        val json = Getter.getPosts()
+        Parser.parsePosts(json.getJSONObject("data"), this)
+    }
+
     /**
      * 创建帖子
      * @param title 帖子标题
@@ -132,18 +139,20 @@ class PostManager : IManager, Post, Included() {
     )
     suspend fun create(title: String, content: String): ErrorCode {
         val url = URL(Const.BASE_URL + "post")
-        val json = JSONObject()
-            .put("title", title)
-            .put("content", content)
+        val json = JSONObject().apply {
+            put("title", title)
+            put("content", content)
+        }
+
 
         val response = post(url, json)
-        val responseJson = JSONObject(response.body?.string().toString())
-        val code = Parser.parse(responseJson.getInt("code"))
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
         if (code != ErrorCode.SUCCESS) {
             response.close(); return code
         }
 
-        val id = responseJson.getJSONObject("data").getInt("postId")
+        val id = responseJson.getJSONObject("data").getInteger("postId")
 
         get(id)
 
@@ -157,6 +166,48 @@ class PostManager : IManager, Post, Included() {
 
     suspend fun delete() {
         throw NotImplementedError()
+    }
+
+    /**
+     * 帖子点赞
+     * @param id 帖子id
+     * @return 点赞结果
+     * @throws IOException
+     * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IllegalStateException
+     * @see ErrorCode
+     * @author Yang
+     * @since 0.0.1
+     */
+    suspend fun like(id: Int = this.id): ErrorCode {
+        val url = URL(Const.BASE_URL + "like/post?id=$id")
+        val response = get(url)
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
+        response.close()
+        return code
+    }
+
+    /**
+     * 帖子取消点赞
+     * @param id 帖子id
+     * @return 点赞结果
+     * @throws IOException
+     * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IllegalStateException
+     * @see ErrorCode
+     * @author Yang
+     * @since 0.0.1
+     */
+    suspend fun disLike(id: Int = this.id): ErrorCode {
+        val url = URL(Const.BASE_URL + "like/post?id=$id&cancel=true")
+        val response = get(url)
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
+        response.close()
+        return code
     }
 
     // endregion
@@ -183,20 +234,62 @@ class PostManager : IManager, Post, Included() {
     )
     suspend fun createComment(content: String): ErrorCode {
         val url = URL(Const.BASE_URL + "comment")
-        val json = JSONObject()
-            .put("content", content)
-            .put("postId", id)
-
+        val json = JSONObject().apply {
+            put("content", content)
+            put("postId", id)
+        }
         val response = post(url, json)
-        val responseJson = JSONObject(response.body?.string().toString())
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
 
-        val code = Parser.parse(responseJson.getInt("code"))
+        val code = Parser.parse(responseJson.getInteger("code"))
         if (code != ErrorCode.SUCCESS) {
             response.close(); return code
         }
 
         get(id)
 
+        response.close()
+        return code
+    }
+
+    /**
+     * 评论点赞
+     * @param id 帖子id
+     * @return 点赞结果
+     * @throws IOException
+     * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IllegalStateException
+     * @see ErrorCode
+     * @author Yang
+     * @since 0.0.1
+     */
+    suspend fun likeComment(id: Int = this.id): ErrorCode {
+        val url = URL(Const.BASE_URL + "like/comment?id=$id")
+        val response = get(url)
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
+        response.close()
+        return code
+    }
+
+    /**
+     * 评论取消点赞
+     * @param id 帖子id
+     * @return 点赞结果
+     * @throws IOException
+     * @throws JSONException
+     * @throws MalformedURLException
+     * @throws IllegalStateException
+     * @see ErrorCode
+     * @author Yang
+     * @since 0.0.1
+     */
+    suspend fun disLikeComment(id: Int = this.id): ErrorCode {
+        val url = URL(Const.BASE_URL + "like/comment?id=$id&cancel=true")
+        val response = get(url)
+        val responseJson = JSONObject.parseObject(response.body?.string().toString())
+        val code = Parser.parse(responseJson.getInteger("code"))
         response.close()
         return code
     }
@@ -228,6 +321,36 @@ class PostManager : IManager, Post, Included() {
         likeCount = -1
 
         return this
+    }
+
+    /**
+     * 通过url发送请求
+     * @author Yang
+     * @since 0.0.1
+     * @param url 请求url
+     * @return JSONObject 请求返回的json数据
+     * @throws IOException
+     * @throws IllegalStateException
+     */
+    @Throws(
+        IOException::class,
+        IllegalStateException::class
+    )
+    suspend fun get(
+        url: URL,
+    ) = withContext(Dispatchers.IO) {
+        return@withContext client.newCall(
+            Request.Builder()
+                .url(url)
+                .headers(
+                    Headers.headersOf(
+                        "User-Agent", Community.userAgent,
+                        "Authorization", "Bearer $token"
+                    )
+                )
+                .get()
+                .build()
+        ).execute()
     }
 
     /**
@@ -273,7 +396,7 @@ class PostManager : IManager, Post, Included() {
      * @return toString
      */
     override fun toString(): String {
-        return "PostManager(id=$id, title='$title', createdUserId=$createdUserId, content='$content', createdDate='$createdDate', lastCommentId=$lastCommentId, lastCommentUserId=$lastCommentUserId, lastCommentDate='$lastCommentDate', editedDate='$editedDate', editedUserId=$editedUserId, viewCount=$viewCount, commentCount=$commentCount, likeCount=$likeCount, included='$included')"
+        return "PostManager(id=$id, title='$title', createdUserId=$createdUserId, content='$content', createdDate='$createdDate', lastCommentId=$lastCommentId, lastCommentUserId=$lastCommentUserId, lastCommentDate='$lastCommentDate', editedDate='$editedDate', editedUserId=$editedUserId, viewCount=$viewCount, commentCount=$commentCount, likeCount=$likeCount, included='$included', allPosts='$allPosts')"
     }
 
     // endregion

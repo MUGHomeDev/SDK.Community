@@ -40,9 +40,9 @@ interface User : BaseModel {
     var userName: String
 
     /**
-     * 用户昵称
+     * 用户显示名称
      */
-    var userNickname: String
+    var userDisplayName: String
 
     /**
      * 用户头像URL
