@@ -211,6 +211,7 @@ internal object Parser {
             it.viewCount = postInfo.getInteger("viewCount")
             it.commentCount = postInfo.getInteger("commentCount")
             it.likeCount = postInfo.getInteger("likeCount")
+            it.isLiked = if (input.containsKey("isLiked")) input.getBoolean("isLiked") else false
 
             input.getJSONArray("comments")
                 .forEach { comment ->
@@ -253,9 +254,10 @@ internal object Parser {
             override var viewCount = input.getInteger("viewCount")
             override var commentCount = input.getInteger("commentCount")
             override var likeCount = input.getInteger("likeCount")
+            override var isLiked = if (input.containsKey("isLiked")) input.getBoolean("isLiked") else false
 
             override fun toString(): String {
-                return "Post(id=$id, title='$title', createdUserId=$createdUserId, content='$content', createdDate='$createdDate', lastCommentId=$lastCommentId, lastCommentUserId=$lastCommentUserId, lastCommentDate='$lastCommentDate', editedDate='$editedDate', editedUserId=$editedUserId)"
+                return "Post(id=$id, title='$title', createdUserId=$createdUserId, content='$content', createdDate='$createdDate', lastCommentId=$lastCommentId, lastCommentUserId=$lastCommentUserId, lastCommentDate='$lastCommentDate', editedDate='$editedDate', editedUserId=$editedUserId, isLiked=$isLiked, viewCount=$viewCount, commentCount=$commentCount, likeCount=$likeCount)"
             }
         }
     }

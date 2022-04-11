@@ -78,6 +78,7 @@ class PostManager : IManager, Post, Included() {
     override var viewCount = -1
     override var commentCount = -1
     override var likeCount = -1
+    override var isLiked = false
 
     /**
      * 初始化Included
@@ -143,7 +144,6 @@ class PostManager : IManager, Post, Included() {
             put("title", title)
             put("content", content)
         }
-
 
         val response = post(url, json)
         val responseJson = JSONObject.parseObject(response.body?.string().toString())
@@ -270,6 +270,9 @@ class PostManager : IManager, Post, Included() {
         val responseJson = JSONObject.parseObject(response.body?.string().toString())
         val code = Parser.parse(responseJson.getInteger("code"))
         response.close()
+        if (code == ErrorCode.SUCCESS) {
+            isLiked = true
+        }
         return code
     }
 
@@ -291,6 +294,9 @@ class PostManager : IManager, Post, Included() {
         val responseJson = JSONObject.parseObject(response.body?.string().toString())
         val code = Parser.parse(responseJson.getInteger("code"))
         response.close()
+        if (code == ErrorCode.SUCCESS) {
+            isLiked = false
+        }
         return code
     }
 
@@ -396,7 +402,7 @@ class PostManager : IManager, Post, Included() {
      * @return toString
      */
     override fun toString(): String {
-        return "PostManager(id=$id, title='$title', createdUserId=$createdUserId, content='$content', createdDate='$createdDate', lastCommentId=$lastCommentId, lastCommentUserId=$lastCommentUserId, lastCommentDate='$lastCommentDate', editedDate='$editedDate', editedUserId=$editedUserId, viewCount=$viewCount, commentCount=$commentCount, likeCount=$likeCount, included='$included', allPosts='$allPosts')"
+        return "PostManager(id=$id, title='$title', createdUserId=$createdUserId, content='$content', createdDate='$createdDate', lastCommentId=$lastCommentId, lastCommentUserId=$lastCommentUserId, lastCommentDate='$lastCommentDate', editedDate='$editedDate', editedUserId=$editedUserId, viewCount=$viewCount, commentCount=$commentCount, likeCount=$likeCount, isLiked=$isLiked, included='$included', allPosts='$allPosts')"
     }
 
     // endregion

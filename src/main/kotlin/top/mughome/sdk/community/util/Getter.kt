@@ -139,9 +139,15 @@ internal object Getter {
             Request.Builder()
                 .url(url)
                 .headers(
-                    Headers.headersOf(
-                        "User-Agent", Community.userAgent
-                    )
+                    if (Community.token != "")
+                        Headers.headersOf(
+                            "User-Agent", Community.userAgent,
+                            "Authorization", "Bearer ${Community.token}"
+                        )
+                    else
+                        Headers.headersOf(
+                            "User-Agent", Community.userAgent
+                        )
                 )
                 .get()
                 .build()

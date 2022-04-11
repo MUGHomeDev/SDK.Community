@@ -39,9 +39,9 @@ object Community {
     internal lateinit var userAgent: String
 
     /**
-     * 徐初始化：用户token
+     * 需初始化：用户token
      */
-    internal lateinit var token: String
+    internal var token: String = ""
 
     /**
      * 初始化类

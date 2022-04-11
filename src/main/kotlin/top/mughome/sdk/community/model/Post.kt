@@ -93,4 +93,9 @@ interface Post : BaseModel {
      * 点赞数
      */
     var likeCount: Int
+
+    /**
+     * 是否点赞
+     */
+    var isLiked: Boolean
 }
