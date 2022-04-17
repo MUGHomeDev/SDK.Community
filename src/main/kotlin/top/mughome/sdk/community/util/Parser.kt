@@ -88,12 +88,13 @@ internal object Parser {
      */
     fun parseUser(input: JSONObject, user: User) {
         user.let {
-            it.id = input.getInteger("userId")
-            it.userName = input.getString("userName")
-            it.userDisplayName = input.getString("userDisplayName")
-            it.userRole = input.getInteger("userRole")
-            it.userAvatar = if (input["userAvatar"] == null) "" else input.getString("userAvatar")
-            it.userCreatedDate = input.getString("userCreatedDate")
+            it.id = input.getInteger("id")
+            it.name = input.getString("name")
+            it.displayName = input.getString("displayName")
+            it.role = input.getInteger("role")
+            it.avatar = if (input["avatar"] == null) "" else input.getString("avatar")
+            it.createdDate = input.getString("createdDate")
+            it.points = input.getInteger("points")
         }
     }
 
@@ -106,16 +107,17 @@ internal object Parser {
     private fun parseUser(input: JSONObject): User {
         return object : User {
             override val type = ModelType.USER
-            override var id = input.getInteger("userId")
+            override var id = input.getInteger("id")
 
-            override var userName = input.getString("userName")
-            override var userDisplayName = input.getString("userDisplayName")
-            override var userAvatar = input.getString("userAvatar")
-            override var userRole = input.getInteger("userRole")
-            override var userCreatedDate = input.getString("userCreatedDate")
+            override var name = input.getString("name")
+            override var displayName = input.getString("displayName")
+            override var avatar = input.getString("avatar")
+            override var role = input.getInteger("role")
+            override var createdDate = input.getString("createdDate")
+            override var points = input.getInteger("points")
 
             override fun toString(): String {
-                return "User(id=$id, userName='$userName', userNickname='$userDisplayName', userRole=$userRole, userAvatar='$userAvatar', userCreatedDate='$userCreatedDate')"
+                return "User(id=$id, name='$name', displayName='$displayName', role=$role, avatar='$avatar', createdDate='$createdDate', points=$points)"
             }
         }
     }

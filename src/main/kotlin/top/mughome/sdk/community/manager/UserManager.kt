@@ -50,11 +50,12 @@ open class UserManager : IManager, User {
     /**
      * 初始化User
      */
-    override var userName = ""
-    override var userDisplayName = ""
-    override var userAvatar = ""
-    override var userRole = -1
-    override var userCreatedDate = ""
+    override var name = ""
+    override var displayName = ""
+    override var avatar = ""
+    override var role = -1
+    override var createdDate = ""
+    override var points = 0
 
     // endregion
 
@@ -98,7 +99,7 @@ open class UserManager : IManager, User {
      * @since 0.0.1
      */
     override fun toString(): String {
-        return "UserManager(id=$id, userName='$userName', userNickname='$userDisplayName', userRole=$userRole, userAvatar='$userAvatar', userCreatedDate='$userCreatedDate')"
+        return "UserManager(id=$id, name='$name', displayName='$displayName', role=$role, avatar='$avatar', createdDate='$createdDate', points=$points)"
     }
 
     /**
@@ -109,11 +110,12 @@ open class UserManager : IManager, User {
      */
     open fun clear(): UserManager {
         id = -1
-        userName = ""
-        userDisplayName = ""
-        userRole = -1
-        userAvatar = ""
-        userCreatedDate = ""
+        name = ""
+        displayName = ""
+        role = -1
+        avatar = ""
+        createdDate = ""
+        points = 0
 
         return this
     }

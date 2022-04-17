@@ -37,25 +37,30 @@ interface User : BaseModel {
     /**
      * 用户名
      */
-    var userName: String
+    var name: String
 
     /**
      * 用户显示名称
      */
-    var userDisplayName: String
+    var displayName: String
 
     /**
      * 用户头像URL
      */
-    var userAvatar: String
+    var avatar: String
 
     /**
      * 用户角色
      */
-    var userRole: Int
+    var role: Int
 
     /**
      * 用户注册时间
      */
-    var userCreatedDate: String
+    var createdDate: String
+
+    /**
+     * 用户点数
+     */
+    var points: Int
 }

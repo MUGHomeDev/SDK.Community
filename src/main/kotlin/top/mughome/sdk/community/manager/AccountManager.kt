@@ -298,7 +298,7 @@ class AccountManager : UserManager(), IToken {
      * @return toString
      */
     override fun toString(): String {
-        return "AccountManager(id=$id, userName='$userName', userDisplayName='$userDisplayName', userRole=$userRole, userAvatar='$userAvatar', userCreatedDate='$userCreatedDate', exp=$exp, token='$token')"
+        return "AccountManager(id=$id, name='$name', displayName='$displayName', role=$role, avatar='$avatar', createdDate='$createdDate', points=$points, exp=$exp, token='$token')"
     }
 
     /**
